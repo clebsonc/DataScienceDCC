@@ -1,6 +1,6 @@
 ---
 title: "Clebson Cardoso Alves de Sá"
-output: html_notebook
+output: github_document
 ---
 
 ## 1. Geometric Mean
@@ -14,7 +14,7 @@ The code is quite simple, firstly we evaluate if any value of the vector is nega
 ```{r}
 GeometricMean <- function(values){
   if(sum(values < 0) > 0)
-    warning("The values must be greater than zero.\n")
+    warning("Negative values found.\n")
   return(prod(values)**(1/length(values)))
 }
 ```
