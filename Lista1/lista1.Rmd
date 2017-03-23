@@ -2,9 +2,9 @@
 title: "Clebson Cardoso Alves de Sá"
 author: '2016751813'
 output:
+  pdf_document: default
   html_notebook: default
   html_document: default
-  pdf_document: default
 ---
 
 ## 1. Geometric Mean
@@ -50,7 +50,7 @@ head(data, 5)
 Now that we know how the data looks like, we can play around with the data solving the following problems:
 
 ### 2.1 Geometric Mean
-Compute the geometric mean function in each column of the data frame data. Let's use the let's use the function `GeometricMean` created on topic 1. As we can observe, a few outputs are warning messages, since there are negative values in a few of the column's.
+Let's use the function `GeometricMean` created on topic 1 to compute the geometric mean for each column of the data frame.  As we can observe, a few outputs are warning messages, since there are negative values in a few of the columns.
 
 ```{r}
 for (col_idx in 1:dim(data)[2]){
@@ -61,7 +61,7 @@ for (col_idx in 1:dim(data)[2]){
 
 
 ### 2.2 Standard Deviation
-Lets compute the standard deviation for each column in the dataset. R already has a built-in function called `sd` that computes the standard deviation. Let's use a vector to hold the standard deviation for each column, and only after computing the value for each column print the standard deviation for each column. The code is shown bellow:
+Lets compute the standard deviation for each column in the dataset. R already has a built-in function named `sd` that computes the standard deviation. Let's use a vector to save the values for each column, and only after computing the individual values print-out the standard. The code is shown bellow:
 
 ```{r}
 standard_deviation = c()  # vectr
@@ -72,7 +72,7 @@ for(i in 1:dim(data)[2]){
 print(standard_deviation)
 ```
 
-As we can observe above, each value is the standard deviation for a given column in the range[1, 25]. Therefore the standard deviation for the first column is 0.9690, for the second is 0.9942 and the column 25 has a standard deviation of 0.9824.
+As we can observe above, each value is the standard deviation for a given column in the range [1, 25]. Therefore the standard deviation for the first column is 0.9690, for the second is 0.9942 and the column 25 has a standard deviation of 0.9824.
 
 
 
@@ -89,7 +89,7 @@ print(total_sum)
 
 Just like for the standard deviation, the first value is the total for the first column, the second for the second column and so-on.
 
-The sum for the lines are just alike, where the first value is the sum for the first line, the second value for the second line and so-on.
+The sum for the lines are just alike, where the first value is the sum for the first line, the second value for the second line, and so-on. The code is shown bellow:
 
 ```{r}
 total_sum = c()
@@ -121,11 +121,12 @@ As it's possible to see, both approaches indicates that after meeting the condit
 
 ### 2.5 Replacing Column Names
 Let's take a look of how the column names looks like:
+
 ```{r}
 colnames(data)
 ```
 
-To modify the column names, it's necessary to replace the current variable names using the function `colnames` by passing the new variable names. The fragment of code to do this is quite simple, and can be seen bellow: 
+To modify the column names, it's necessary to replace the current variable names using the function `colnames` by passing the new names. The fragment of code to do this is quite simple, and can be seen bellow: 
 
 
 ```{r}
@@ -174,7 +175,7 @@ boxplot(iris$Petal.Width ~ iris$Species, main="Petal.Width ~ Species")
 
 
 ### 3.4 Histogram
-To compute the histogram, R provides the function `hist`. In the following chart it's shown the histogram for each column of the data set iris. To plot the histogram for the column Species, was necessary to cast it's values to numeric.
+To compute the histogram, R provides the function `hist`. The following chart shows the histogram for each column of the data set iris. To plot the histogram for the column Species, was necessary to cast it's values to numeric.
 
 ```{r}
 par(mfrow=c(2,3))
@@ -226,7 +227,7 @@ for(i in 1:dim(attitude)[2])
 print(mean_list)
 ```
 
-A tider and simpler way of doing this consist of using the `sapply` function within R. This approach perform the same operation, but much more faster. The code can be seen bellow:
+A tider and simpler way of doing this consist of using the `sapply` function within R. This approach performs the same operation, but much more faster. The code can be seen bellow:
 ```{r}
 means_attitude <- sapply(attitude, mean)
 print(means_attitude)
