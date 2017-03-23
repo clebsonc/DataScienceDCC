@@ -1,0 +1,123 @@
+---
+title: "Clebson Cardoso Alves de Sá"
+output: html_notebook
+---
+
+## 1. Geometric Mean
+
+The function bellow computes the geometric mean of a vector $x = \{x_1, x_2, \dots, x_n\}$. If any of the values within the vector are negative, the function gives a warning message and computes the geometric mean. To compute the geometric mean, the following equations is used:
+$$
+f(x) = \left( \prod_{i}^{n}x_{i} \right)^{\frac{1}{n}}
+$$
+The code is quite simple, firstly we evaluate if any value of the vector is negative. If that is the case a warning message is returned informing the problem. Secondly the built-in `prod` function is used to compute the product of all values. Finally, the obtained result is raised to the power of $\frac{1}{n}$. The code can be viewed bellow.
+
+```{r}
+GeometricMean <- function(values){
+  if(sum(values < 0) > 0)
+    warning("The values must be greater than zero.\n")
+  return(prod(values)**(1/length(values)))
+}
+```
+
+Let's make a few test cases for the `GeometricMean` function. We are going to use as example three test cases obtained from the [MathIsFun](https://www.mathsisfun.com/numbers/geometric-mean.html) website. As can be verified, all outputs are correctly computed.
+```{r}
+GeometricMean(c(2, 18))
+GeometricMean(c(10, 51.2, 8))
+GeometricMean(c(1, 3, 9, 27, 81))
+```
+
+***
+
+## 2. Building a New Dataset
+Lets build a dataset using the random generation normal distribution with mean equal to 3 and default standard deviation 1. To do that, it's necessary to simple use the `rnorm` function and append the obtained results into a matrix. The code to that is as follows: 
+
+```{r}
+set.seed(123)  # set the random seed generator
+data <- data.frame(matrix(rnorm(10000, mean=3), ncol=25, dimnames=list(NULL, paste("X", 1:25, sep="."))))
+```
+
+Now let`s take a look at how the newly created data frame looks like, to do that let's print the first 5 lines of the data.
+```{r}
+head(data, 5)
+```
+
+Now that we know how the data looks like, we can play around with the data solving the following problems:
+
+### 2.1 Geometric Mean
+Compute the geometric mean function in each column of the data frame data. Let's use the let's use the function `GeometricMean` created on topic 1. As we can observe, a few outputs are warning messages, since there are negative values in a few of the column's.
+
+```{r}
+for (col_idx in 1:dim(data)[2]){
+  print(GeometricMean(data[col_idx]))
+}
+```
+
+
+
+### 2.2 Standard Deviation
+Lets compute the standard deviation for each column in the dataset. R already has a built-in function called `sd` that computes the standard deviation. Let's use a vector to hold the standard deviation for each column, and only after computing the value for each column print the standard deviation for each column. The code is shown bellow:
+
+```{r}
+standard_deviation = c()  # vectr
+for(i in 1:dim(data)[2]){
+  standard_deviation = c(standard_deviation, sd(data[,i]))
+}
+
+print(standard_deviation)
+```
+
+As we can observe above, each value is the standard deviation for a given column in the range[1, 25]. Therefore the standard deviation for the first column is 0.9690, for the second is 0.9942 and the column 25 has a standard deviation of 0.9824.
+
+
+
+### 2.3 Total
+Now let's compute the total sum for each column. Just like the previous question, we are going to use R summation function which is called `sum` to compute the total for all columns of the data frame. The values for each column will be held in a vector and printed out after the total for all columns are computed.
+
+```{r}
+total_sum = c()
+for (i in 1:dim(data)[2]){
+  total_sum = c(total_sum, sum(data[,i]))
+}
+print(total_sum)
+```
+
+Just like for the standard deviation, the first value is the total for the first column, the second for the second column and so-on.
+
+### 2.4 Conditional Selection
+Now let's select a subset of the original data, considering  the restriction that the values for the column $X.1 > 3$ and the values for the column $X.20 < 3$. There a few possibilities of doing this, the simpler way is to use the built-in R function `subset`, which return slices of the data that meet the giving condition. The code is shown bellow:
+
+```{r}
+sub <- subset(data, data$X.1 > 3 & data$X.20 < 3)
+dim(sub)  # return the dimension of the data frame (lines, columns)
+```
+
+The second way is to use R data slicing, which is shown in the code bellow:
+
+```{r}
+sub2 <- data[data$X.1 > 3 & data$X.20 < 3,]
+dim(sub2) # return the dimension of the data frame (lines, columns)
+```
+
+As it's possible to see, both approaches indicates that after meeting the condition, only 102 lines of the data are left.
+
+
+### 2.5 Replacing Column Names
+Let's take a look of how the column names looks like:
+```{r}
+colnames(data)
+```
+
+To modify the column names, it's necessary to replace the current variable names using the function `colnames` by passing the new variable names. The fragment of code to do this is quite simple, and can be seen bellow: 
+
+
+```{r}
+new_col_names = sprintf("%s%d", "Var", 1:25)
+colnames(data) <- new_col_names
+head(data, 5)
+```
+
+As it's possible to see in the head for the dataset, all column names were modified for the $Var1, Var2, \dots, Var25$.
+
+
+
+
