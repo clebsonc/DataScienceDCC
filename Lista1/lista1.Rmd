@@ -1,6 +1,6 @@
 ---
 title: "Clebson Cardoso Alves de Sá"
-output: github_document
+output: html_notebook
 ---
 
 ## 1. Geometric Mean
@@ -118,6 +118,104 @@ head(data, 5)
 
 As it's possible to see in the head for the dataset, all column names were modified for the $Var1, Var2, \dots, Var25$.
 
+***
+
+## 3. Iris Data Set
+Reading the data set Iris and verifying the first 5 lines.
+```{r}
+iris = read.csv("./iris.csv")
+head(iris, 5)
+```
+
+### 3.1 Obtaining help
+The documentation for datasets that are well known and the built-in functions in R can be checked using either `?` or the `help` function. This is done in the following way:
+
+```{r}
+?iris
+help("iris")
+```
+
+### 3.2 Boxplot
+It's possible to plot a box-and-whisker plot by calling the `boxplot` function in R. If a dataframe is given, it plots all variables in a single plot. The code is shown bellow:
+
+```{r}
+boxplot(iris)
+```
+
+### 3.3 BoxPlot in Groups
+To plot multiple charts in the same frame we can split the window using the R function `par(mfrow=c(lines,cols))`. The aggregation of groups can be combined using the Tilde Operator `~` to separate the left and right hand sides of the dataframe.
+This operation is done for each attribute of the iris dataset grouped by the attribute Species.
+
+```{r}
+par(mfrow=c(2,2))
+boxplot(iris$Sepal.Length ~ iris$Species, main="Sepal.Length ~ Species")
+boxplot(iris$Sepal.Width ~ iris$Species, main="Sepal.Width ~ Species")
+boxplot(iris$Petal.Length ~ iris$Species, main="Petal.Length ~ Species")
+boxplot(iris$Petal.Width ~ iris$Species, main="Petal.Width ~ Species")
+```
+
+
+### 3.4 Histogram
+To compute the histogram, R provides the function `hist`. In the following chart it's shown the histogram for each column of the data set iris. To plot the histogram for the column Species, was necessary to cast it's values to numeric.
+```{r}
+par(mfrow=c(2,3))
+hist(iris$Sepal.Length, xlab = "Sepal.Length")
+hist(iris$Sepal.Width, xlab = "Sepal.Widht")
+hist(iris$Petal.Length, xlab = "Petal.Length")
+hist(iris$Petal.Width, xlab = "Petal.Width")
+
+species = sapply(iris$Species, as.numeric)  # return the column species as numeric
+hist(species, xlab = "Species")
+```
+
+
+## 4 Attitude Dataset
+Let's read the data set attitude and check-out the 5 first lines of the data.
+
+```{r}
+attitude = read.csv('./attitude.csv')
+head(attitude, n=5)
+```
+
+
+
+
+### 4.1 Discovering the dataset
+To visualize the dataset information we can check the R documentation in the same way we did for the Iris collection.
+
+```{r}
+?attitude
+help(attitude)
+```
+
+
+### 4.2 Plotting the Data
+To plot a scatter plot of all attributes against all atributes we can call the `plot` function within R. In doing so, a $N \times N$ matrix of all atributes is ploted. The result of this plot can ve visualized bellow:
+
+```{r}
+plot(attitude)
+```
+
+### 4.3 Computing the Mean
+There are basically two ways of computing the mean of columns. One was already explained in exercises 2.2 (Standard Deviation) and 2.3 (Total Sum), which basically consists of looping through each column and then applying the function to be computed upon the rows. The code for this approach is shown bellow:
+
+```{r}
+mean_list = c()
+for(i in 1:dim(attitude)[2])
+  mean_list = append(mean_list, mean(attitude[,i]))
+print(mean_list)
+```
+
+A tider and simpler way of doing this consist of using the `sapply` function within R. This approach perform the same operation, but much more faster. The code can be seen bellow:
+```{r}
+means_attitude <- sapply(attitude, mean)
+print(means_attitude)
+```
+
+As can be seen, both operation are correctly computed with the same output for each column.
+
+
+### 4.4 Transforming a variable
 
 
 
