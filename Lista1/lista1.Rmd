@@ -1,11 +1,15 @@
 ---
 title: "Clebson Cardoso Alves de Sá"
-output: html_notebook
+author: '2016751813'
+output:
+  html_notebook: default
+  html_document: default
+  pdf_document: default
 ---
 
 ## 1. Geometric Mean
-
 The function bellow computes the geometric mean of a vector $x = \{x_1, x_2, \dots, x_n\}$. If any of the values within the vector are negative, the function gives a warning message and computes the geometric mean. To compute the geometric mean, the following equations is used:
+
 $$
 f(x) = \left( \prod_{i}^{n}x_{i} \right)^{\frac{1}{n}}
 $$
@@ -33,7 +37,9 @@ Lets build a dataset using the random generation normal distribution with mean e
 
 ```{r}
 set.seed(123)  # set the random seed generator
-data <- data.frame(matrix(rnorm(10000, mean=3), ncol=25, dimnames=list(NULL, paste("X", 1:25, sep="."))))
+data <- data.frame(matrix(rnorm(10000, mean=3), 
+                          ncol=25, 
+                          dimnames=list(NULL, paste("X", 1:25, sep="."))))
 ```
 
 Now let`s take a look at how the newly created data frame looks like, to do that let's print the first 5 lines of the data.
@@ -48,7 +54,7 @@ Compute the geometric mean function in each column of the data frame data. Let's
 
 ```{r}
 for (col_idx in 1:dim(data)[2]){
-  print(GeometricMean(data[col_idx]))
+  print(GeometricMean(data[,col_idx]))
 }
 ```
 
@@ -82,6 +88,18 @@ print(total_sum)
 ```
 
 Just like for the standard deviation, the first value is the total for the first column, the second for the second column and so-on.
+
+The sum for the lines are just alike, where the first value is the sum for the first line, the second value for the second line and so-on.
+
+```{r}
+total_sum = c()
+for (i in 1:dim(data)[1]){
+  total_sum = c(total_sum, sum(data[i,]))
+}
+print(total_sum)
+```
+
+
 
 ### 2.4 Conditional Selection
 Now let's select a subset of the original data, considering  the restriction that the values for the column $X.1 > 3$ and the values for the column $X.20 < 3$. There a few possibilities of doing this, the simpler way is to use the built-in R function `subset`, which return slices of the data that meet the giving condition. The code is shown bellow:
@@ -157,6 +175,7 @@ boxplot(iris$Petal.Width ~ iris$Species, main="Petal.Width ~ Species")
 
 ### 3.4 Histogram
 To compute the histogram, R provides the function `hist`. In the following chart it's shown the histogram for each column of the data set iris. To plot the histogram for the column Species, was necessary to cast it's values to numeric.
+
 ```{r}
 par(mfrow=c(2,3))
 hist(iris$Sepal.Length, xlab = "Sepal.Length")
@@ -168,6 +187,7 @@ species = sapply(iris$Species, as.numeric)  # return the column species as numer
 hist(species, xlab = "Species")
 ```
 
+***
 
 ## 4 Attitude Dataset
 Let's read the data set attitude and check-out the 5 first lines of the data.
@@ -192,7 +212,7 @@ help(attitude)
 ### 4.2 Plotting the Data
 To plot a scatter plot of all attributes against all atributes we can call the `plot` function within R. In doing so, a $N \times N$ matrix of all atributes is ploted. The result of this plot can ve visualized bellow:
 
-```{r}
+```{r fig.align='center'}
 plot(attitude)
 ```
 
@@ -216,6 +236,63 @@ As can be seen, both operation are correctly computed with the same output for e
 
 
 ### 4.4 Transforming a variable
+It's possible to easily transform the values of a column to discrete values with the command `cut`. This function basicaly divides the values in intervals considering the buckets given as slicing parameters. To update the dataframe, the only thing required is to make an assignment of the discrete values into the desired column of the dataframe. The code bellow shows how this procedure is done. The first 5 lines of the dataset is shown, and as we can observe, the column `attitude$complaints` is now categoric.
+
+
+
+```{r}
+attitude$complaints = cut(attitude$complaints,
+                          c(-1, 60, 80, 100), 
+                          labels=c("bad", "okay", "good"))
+head(attitude, 5)
+```
+
+
+### 4.5 Rating ~ Complaints
+Let's visualize the box-and-whisker plot by grouping the dataset by the categorical column `attitude$complaints`. As we can observe, $50\%$ of the data representing *bad* complaints are between $(\approx43, \approx65)$ with a median of $50$. For the neutral complaints *okay*, the $50\%$ quantile of the ratings are distributed between $60$ and $71$ with a median of $\approx67$. The ratings for complaints considered *good* are scattered with $50\%$ of the data between $(\approx71, \approx80)$ with a median of $\approx77$.
+
+```{r fig.align='center'}
+boxplot(attitude$rating ~ attitude$complaints, xlab="Complaint", ylab="Rating")
+```
+
+### 4.6 Bar Chart
+Let's see the frequency of each complaint by using the bar chart. The first thing to do is to compute the amount of complaints for each category. This is done by using the logical operator of equivalence. Every outcome that is `TRUE` is considered to be one, while `FALSE` is considered to be zero. Therefore, to get the amount of complaints of each categorical value, we just need sum up the outcome of each comparison. After that, we just call the `barplot` function to plot the chart. This procedure is shown bellow.
+
+```{r fig.align='center'}
+good <- sum(attitude$complaints=='good')
+okay <- sum(attitude$complaints=='okay')
+bad <- sum(attitude$complaints=='bad')
+barplot(c(good, okay, bad), 
+        names.arg = c('good', 'okay', 'bad'), 
+        ylab='Frequency', 
+        xlab='Complaint')
+```
+
+
+
+### 4.7 Modyfying Variable Names
+To modify the names of the discrete variable `attitude$complaints` it is necessary to replace the old values for the new categories. This can be done by calling the `factor` function. The code for this procedure is shown bellow. As it's possible to see for the first 5 lines, the collumn `attitude$complaints` contains the new categories.
+
+```{r}
+attitude$complaints = factor(attitude$complaints, labels = c("Ruim", "Normal", "Bom"))
+head(attitude, 5)
+```
+
+Now that the new categories were applied, the only thing remaining is to redo the plots considering the new labels for categorical variable.
+
+
+```{r fig.align='center'}
+par(mfrow = c(1, 2))
+boxplot(attitude$rating ~ attitude$complaints, xlab="Complaint", ylab="Rating")
+
+good <- sum(attitude$complaints=='Bom')
+okay <- sum(attitude$complaints=='Normal')
+bad <- sum(attitude$complaints=='Ruim')
+barplot(c(good, okay, bad), 
+        names.arg = c('Bom', 'Normal', 'Ruim'), 
+        ylab='Frequency', 
+        xlab='Complaint')
+```
 
 
 
