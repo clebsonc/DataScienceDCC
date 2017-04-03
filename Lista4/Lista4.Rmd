@@ -1,0 +1,178 @@
+---
+title: "Lista 4"
+output: html_notebook
+---
+
+
+# Usage Examples: Binomial Distribution
+
+```{r}
+rbinom(13, 20, 0.15)
+```
+
+```{r}
+dbinom(13, 20, 0.15)
+```
+
+```{r}
+pbinom(13, 20, 0.15)
+```
+
+```{r}
+pbinom(0.20, 20, 0.15)
+```
+
+
+
+# Usage Examples: Poisson Distribution
+
+```{r}
+help(rpois)
+```
+
+
+
+# Usage Examples: Gaussian Distribution
+```{r}
+rnorm(100, 10, 2)
+```
+
+
+```{r}
+dnorm(11.25, 10, 2)
+```
+
+```{r}
+pnorm(11.25, 10, 2)
+```
+
+```{r}
+pnorm(0.20, 10, 2)
+```
+
+# Usage Examples: Exponential Distribution
+```{r}
+help(rexp)
+```
+
+# Other distributions
+```{r}
+help(distributions)
+```
+
+
+
+# Question 1
+```{r}
+x <- 0:10
+px <- dbinom(x, 10, 0.40)
+par(mfrow=c(1,2)) # janela grafica com uma linha de 2 plots
+plot(x, px, type = "h") # para usar linhas verticais at\’{e} os pontos (x,px)
+Fx <- pbinom(x, 10, 0.35)
+plot(x, Fx, type = "s") # o argumento "s"
+```
+
+
+## 1.a)
+Obtenha o gráfico das probabilidades P(X = k) e da função de probabilidade   acumulada F(x) para uma v.a. X ∼ Bin(n = 20, θ = 0.15). 
+
+```{r}
+x1 <- 0:20
+px1 <- dbinom(x1, 20, 0.15)
+par(mfrow=c(1,2)) # janela grafica com uma linha de 2 plots
+plot(x1, px1, type = "h") # para usar linhas verticais at\’{e} os pontos (x,px)
+Fx1 <- pbinom(x1, 20, 0.15)
+plot(x1, Fx1, type = "s") # o argumento "s"
+```
+
+
+## 1.b)
+Qual o valor k em que P(X = k) é máxima? Quanto é esta probabilidade máxima?
+
+```{r}
+max_index = 0
+max_value = px1[1]
+for(i in x1){
+  if (px1[i+1] > max_value){
+    max_value = px1[i+1]
+    max_index = i+1;
+  }
+}
+sprintf("k é máximo em %d com probabilidade de %f.", max_index, max_value)
+```
+
+## 1.c) 
+VISUALMENTE, obtenha uma faixa de valores (a, b) na qual a probabilidade de X ∈ (a, b)
+seja próxima de 1. Procure grosseiramente obter a faixa mais estreita possı́vel.
+
+```{r}
+plot(Fx1[Fx1 > 0.99])
+```
+
+
+## 1.d) 
+O valor (teórico) de E(X) no caso de uma binomial é nθ. Como é o comportamento da função P(X = k) no entorno deste valor E(X)? Ela tem valores P(X = k) relativamente altos?
+
+```{r}
+ex = 20 * 0.15
+print(px1[ex])
+
+```
+
+Conforme pode-se observar, a a probabilidade em torno de E(X) é de 0.22. Este valor é relativamente alto quando comparado com o valor máximo de 0.24.
+
+## 1.e)
+Confirme esta impressão calculando P(a ≤ X ≤ b) usando a função `dnorm` ou `pnorm` do R. Por exemplo, se eu quiser P(5 ≤ X ≤ 8), uso `sum(dnorm(5:8, 20, 0.15))` ou então `pbinom(8, 20, 0.15) - pbinom(5-0.01, 20, 0.15)`. Porque eu subtraio 0.01 de 5 na chamada da segunda função?
+Usando `dnorm`:
+Utilizando `pnorm`:
+
+```{r}
+pn <- pnorm(20, 20, 0.15) - pnorm(1-0.001, 20, 0.15)
+print(pn)
+```
+
+O exercício pede para calcular com $n=20$ e $\theta=15$, conforme pode ser observado a probabilidade do intervalo $[0, 14]$ é $0$. Considerando o intervalo total, a probabilidade é de $0.5$.
+
+Utilizando `dnorm`
+```{r}
+dn <- dnorm(1:20, 20, 0.15)
+print(dn)
+print(sum(dn))
+```
+
+A subtração é dada para que seja considerado o intervalo fechado de 5 a 8.
+
+
+
+##1.f)
+Use qbinom para obter o inteiro k tal que $F(k) = P(X \leq  k) ≈ 0.95$.
+
+```{r}
+qbinom(0.95, 20,0.95)
+```
+
+
+##1.g)
+Verifique o valor da probabilidade acumulada exata F(k) obtida com o inteiro acima usando pbinom.
+```{r}
+print(Fx1[20])
+
+pbinom(20, 20, 1)
+```
+
+## 1.h)
+Gere 1000 valores aleatórios independentes de X ∼ Bin(n = 20, θ = 0.15). Estes valores cairam, em sua maioria, na faixa que você escolheu mais acima? Qual a porcentagem de valores que caiu na faixa que você escolheu?
+
+```{r}
+x2 <- 0:1000
+px2 <- rbinom(x2, 20, 0.15)
+plot(px2)
+```
+
+## 1.i)
+Compare os valores das probabilidades P(X = k) para k = 0, . . . 6 e as frequências relativas destes inteiros nos 100 valores simulados.São parecidos?
+
+```{r}
+prob
+```
+
