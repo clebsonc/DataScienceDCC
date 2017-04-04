@@ -1,6 +1,10 @@
 ---
-title: "Lista 4"
-output: html_notebook
+title: 'Lista 4: Clebson Cardoso Alves de Sá'
+output:
+  html_notebook: default
+  html_document: default
+  pdf_document: default
+  word_document: default
 ---
 
 
@@ -173,6 +177,221 @@ plot(px2)
 Compare os valores das probabilidades P(X = k) para k = 0, . . . 6 e as frequências relativas destes inteiros nos 100 valores simulados.São parecidos?
 
 ```{r}
-prob
+w1 = dbinom(0:6, 20, 0.15)
+print("Dbinomial")
+print(w1)
+w2 = rbinom(100, 20, 0.15)
+print("Rbinomial")
+print(w2)
+for(i in 0:6){
+  print(length(w2[w2 == i])/100)
+}
+```
+
+Conforme pode ser observado, elas são muito parecidas sim
+    w1: 0.03875953 0.13679835 0.22933840 0.24282890 0.18212167 0.10284518 0.04537287
+    w2: 0.05       0.14       0.15       0.23       0.23       0.13       0.04
+
+
+# Questão 2.
+  
+## 2.1
+Obtenha o gráfico das probabilidades P(X = k) e da função de probabilidade acumulada F(x) para uma v.a. X ∼ Poisson(λ) usando dois valores: λ = 0.73 e λ = 10.
+
+```{r}
+  par(mfrow=c(2,3)) 
+    # λ = 0.73
+  x <- 0:10
+  px <- dpois(x, 0.73)
+  plot(x, px, type = "h") 
+  Fx <- dpois(x, 0.73)
+  plot(x, Fx, type = "s") 
+  plot(x, Fx, type = "o") 
+    
+    # λ = 10
+  x <- 0:40
+  px <- dpois(x, 10)
+  plot(x, px, type = "h") 
+  Fx <- dpois(x, 10)
+  plot(x, Fx, type = "s") 
+  plot(x, Fx, type = "o") 
+
+```
+
+      
+## 2.2 
+O valor k em que P(X = k) é máximo é próximo de E(X) = λ?
+com λ = 0.73:, p(X) esta maximo no ponto 0 e 
+com λ = 10:, p(X) esta maximo no ponto 10
+sim, está bem proximo de valor esperado E(X) = λ  
+     
+## 2.3
+Obtenha um intervalo de valores (a, b), o mais curto possı́vel gosseiramente, para o qual $P(X ∈(a, b))\approx1$
+para λ = 0.73  X pertence intervalo de (0,3)
+para λ = 10    X pertence intervalo de (2,20)
+  
+## 2.4 
+Usando ppois do R, calcule $P(a ≤ X ≤ b)$.
+para λ = 0.73:
+ppois(3, 0.73) - ppois(0-0.01, 0.73)   = 0.9933523
+
+para λ = 10:
+ppois(20, 10)  - ppois(2-0.01, 10)     = 0.9979123
+
+## 2.5 
+Gere 200 valores aleatórios independentes de X ∼ Poisson(λ) com os dois valores acima para λ.
+para λ = 0.73:
+
+```{r}
+P1 = dpois(0:6, 0.73)
+P1
+P2 = rpois(100, 0.73)
+P2
+for(i in 0:6){
+  print(length(P2[P2 == i])/100)
+}
+```
+sao parecidos sim: 
+P1: 0.4819089901 0.3517935628 0.1284046504 0.0312451316 0.0057022365 0.0008325265 0.0001012907
+P2: 0.4          0.4          0.12         0.07         0.01         0            0
+
+# Questão 3
+## Questão 3.1
+
+```{r}
+k  = 0:100
+pk = 0.3828484 / (k^1.5)
+plot(k, pk, type = "h") 
+```
+
+```{r}
+fk_list <- c()
+for (k in 0:100){ 
+  fk=0
+  for(i in 1:k){
+    fk = fk + (1/(i^1.5))
+  }
+  fk_list = append(fk_list, 0.3828484 * fk)
+}
+k  = 0:100
+Fk = fk_list
+plot(k, Fk, type = "s") 
+```
+
+
+
+
+ 
+
+   
+```{r}
+ # α = 1 => C = 1/ζ(1+α) => C = 1/1.645 = 0.6079027
+ k  = 0:100
+ pk = 0.6079027 / (k^2)
+ plot(k, pk, type = "h") 
+ 
+ 
+ fk_list <- c()
+ for (k in 0:100){ 
+   fk=0
+   for(i in 1:k){
+     fk = fk + (1/(i^2))
+   }
+   fk_list = append(fk_list, 0.6079027 * fk)
+ }
+ k  = 0:100
+ Fk = fk_list
+ plot(k, Fk, type = "s") 
+```
+
+```{r}
+# α = 2 => C = 1/ζ(1+α) => C = 1/1.202 = 0.8319468
+ k  = 0:100
+ pk = 0.8319468 / (k^3)
+ plot(k, pk, type = "h") 
+ 
+ 
+ fk_list <- c()
+ for (k in 0:100){ 
+   fk=0
+   for(i in 1:k){
+     fk = fk + (1/(i^3))
+   }
+   fk_list = append(fk_list, 0.8319468 * fk)
+ }
+ k  = 0:100
+ Fk = fk_list
+ plot(k, Fk, type = "s") 
+```
+
+
+
+
+## 3.2
+```{r}
+ par(mfrow=c(1,1)) 
+ k0  = 0:99
+ k1  = 1:100
+ pk0 = 0.3828484 / (k0^1.5)
+ pk1 = 0.3828484 / (k1^1.5)
+ plot(pk1/pk0, type = "s") 
+ 
+```
+Quando k cresce, k/(k + 1) eh sempre menor que 1 mas cada vez mais proximo de 1
+ 
+ 
+ 
+## 3.3
+Quando α maior, crescimento eh mais rapido e tambem mais rapido, fracao de k/(k + 1) fica perto de 1.
+ 
+## 3.4
+ alpha = 2 => C = 1/ζ(1+α) => C = 1/1.202 = 0.8319468
+ 
+```{r}
+alpha=2
+k  = 0:100
+pk = 0.8319468 / (k^3)
+plot(log(k), log(pk), col = "red") 
+
+abline(log(0.8319468), -(1 + alpha))
+```
+A linha é exatamente acima de plot anterior e isso significa que a linha mostra a inclinacao de plot log
+
+
+## 3.5
+```{r}
+rzipf = function(nsim = 1, alpha = 1, Cte = 1/1.645)
+{
+ res = numeric(nsim)
+ for(i in 1:nsim){
+   x = -1
+   k = 1
+   F = p = Cte
+   U = runif(1)
+   while( x == -1){
+     if(U < F) x = k
+     else{
+       p = p * (k/(k+1))^(1+alpha)
+       F = F + p
+       k = k+1
+     }
+   }
+   res[i] = x
+ }
+ res
+}
+
+# test
+rzipf(400) 
+rzipf(400, 1/2, 1/2.62)
+rzipf(400, 1, 1/1.645)
+rzipf(400, 2, 1/1.202)
+
+```
+
+
+O resultado de rzipf(400, 1, 1/1.645)
+```{r}
+rzipf(400, 1, 1/1.645)
 ```
 
